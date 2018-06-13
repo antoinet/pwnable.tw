@@ -85,15 +85,11 @@ See: [syscall reference](https://syscalls.kernelgrok.com/).
 ## Stack frame
 ```
           +--------------------+
-          | ret addr           |  ebp + 4
-          +--------------------+
-  ebp --> | saved ebp          |  
-          +--------------------+
           | saved esp          |  esp + 24
           +--------------------+
-          | _exit 0x0804809d   |  esp + 20
+          | _exit 0x0804809d   |  esp + 20  --  ret addr
           +--------------------+
-          | "CTF:"             |  esp + 16
+          | "CTF:"             |  esp + 16  --  saved ebp  <-- esp before ret
           +--------------------+
           | "the "             |  esp + 12
           +--------------------+
