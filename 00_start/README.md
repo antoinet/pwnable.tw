@@ -76,8 +76,8 @@ See: [syscall reference](https://syscalls.kernelgrok.com/).
 
              _exit:
 0804809d         pop        esp                                                 ; DATA XREF=_start+1
-0804809e         xor        eax, eax
-080480a0         inc        eax
+0804809e         xor        eax, eax		; eax = 0
+080480a0         inc        eax				; eax = 1 (0x01 => sys_exit)
 080480a1         int        0x80
                         ; endp
 ```
