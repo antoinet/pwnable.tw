@@ -1,17 +1,5 @@
 # Notes
 
-## Docker environment
-
-### Build
-```
-$ docker build -t pwnable:start .
-```
-
-### Debugging
-```
-$ docker run --rm -it --name pwnable --cap-add=SYS_PTRACE --security-opt seccomp=unconfined pwnable:start bash
-```
-
 Hex and ASCII output: https://stackoverflow.com/questions/25786982/how-can-gdb-show-both-hex-and-ascii-when-examing-memory
 
 ### Service
