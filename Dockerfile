@@ -1,6 +1,7 @@
 FROM ubuntu
 COPY 00_start/start /opt/pwnable/start
 COPY 01_orw/orw /opt/pwnable/orw
+COPY 02_calc/calc /opt/pwnable/calc
 
 RUN apt update \
   && apt install -y \
@@ -17,6 +18,7 @@ RUN apt update \
   && echo "source ~/peda/peda.py" >> ~/.gdbinit \
   && pip install pwntools \
   && chmod +x /opt/pwnable/start \
-  && chmod +x /opt/pwnable/orw
+  && chmod +x /opt/pwnable/orw \
+  && chmod +x /opt/pwnable/calc
 
 CMD bash
