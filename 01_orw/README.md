@@ -50,21 +50,21 @@
 080484ce         push       edi
 080484cf         push       esi
 080484d0         push       ebx
-080484d1         sub        esp, 0x7c
+080484d1         sub        esp, 0x7c                                           ; 124 bytes on stack
 080484d4         mov        eax, dword [gs:0x14]
-080484da         mov        dword [ebp+var_1C], eax
+080484da         mov        dword [ebp+var_1C], eax                             ; vac_1C = *gs:0x14
 080484dd         xor        eax, eax
-080484df         lea        eax, dword [ebp+var_7C]
+080484df         lea        eax, dword [ebp+var_7C]                             ;
 080484e2         mov        ebx, 0x8048640
 080484e7         mov        edx, 0x18
-080484ec         mov        edi, eax
-080484ee         mov        esi, ebx
-080484f0         mov        ecx, edx
+080484ec         mov        edi, eax                                            ; edi = &var_7C (byte array?)
+080484ee         mov        esi, ebx                                            ; esi = 0x08048640
+080484f0         mov        ecx, edx                                            ; ecx = 24
 080484f2         rep movsd  dword [edi], dword [esi]
-080484f4         mov        word [ebp+var_84], 0xc
+080484f4         mov        word [ebp+var_84], 0xc                              ; *var_84 = 12 // nr of bpf rules
 080484fd         lea        eax, dword [ebp+var_7C]
-08048500         mov        dword [ebp+var_80], eax
-08048503         sub        esp, 0xc
+08048500         mov        dword [ebp+var_80], eax                             ; *var_80 = &var_7c // ptr to struct sock_fprog
+08048503         sub        esp, 0xc                                            ; 12 additional bytes on stack
 08048506         push       0x0
 08048508         push       0x0
 0804850a         push       0x0
@@ -73,7 +73,7 @@
 08048510         call       j_prctl                                             ; prctl(PR_SET_NO_NEW_PRIVS, 1)
 08048515         add        esp, 0x20
 08048518         sub        esp, 0x4
-0804851b         lea        eax, dword [ebp+var_84]
+0804851b         lea        eax, dword [ebp+var_84]                             ; pointer to struct sock_fprog
 08048521         push       eax
 08048522         push       0x2
 08048524         push       0x16                                                ; argument "__option" for method j_prctl
@@ -97,6 +97,32 @@
                 ; endp
 ```
 
+```
+08048640         db  0x20 ; ' '                                                 ; DATA XREF=orw_seccomp+23
+08048641         db  0x00 ; '.'
+08048642         db  0x00 ; '.'
+08048643         db  0x00 ; '.'
+08048644         db  0x04 ; '.'
+08048645         db  0x00 ; '.'
+08048646         db  0x00 ; '.'
+08048647         db  0x00 ; '.'
+08048648         db  0x15 ; '.'
+08048649         db  0x00 ; '.'
+0804864a         db  0x00 ; '.'
+0804864b         db  0x09 ; '.'
+0804864c         db  0x03 ; '.'
+0804864d         db  0x00 ; '.'
+0804864e         db  0x00 ; '.'
+0804864f         db  0x40 ; '@'
+08048650         db  0x20 ; ' '
+08048651         db  0x00 ; '.'
+08048652         db  0x00 ; '.'
+08048653         db  0x00 ; '.'
+08048654         db  0x00 ; '.'
+08048655         db  0x00 ; '.'
+08048656         db  0x00 ; '.'
+08048657         db  0x00 ; '.'
+```
 
 
 ## seccomp
@@ -108,6 +134,7 @@
  * https://github.com/torvalds/linux/blob/master/include/uapi/linux/seccomp.h
  * https://blog.cloudflare.com/bpf-the-forgotten-bytecode/
  * https://kitctf.de/writeups/32c3ctf/ranger
+ * https://github.com/unixist/seccomp-bypass
 ```
  prctl(0x26, 0x1, 0x0, 0x0, 0x0);       // prctl(PR_SET_NO_NEW_PRIVS, 1)
  prctl(0x16, 0x2, addr);                // prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, *(struct sock_fprog))

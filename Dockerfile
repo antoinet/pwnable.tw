@@ -12,6 +12,7 @@ RUN apt update \
      netcat \
      python \
      python-pip \
+     vim \
   && git clone https://github.com/longld/peda.git ~/peda \
   && echo "source ~/peda/peda.py" >> ~/.gdbinit \
   && pip install pwntools \
